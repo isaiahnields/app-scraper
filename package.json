@@ -1,0 +1,25 @@
+{
+  "name": "review-analysis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "app-store-scraper": "^0.13.0",
+    "sqlite3": "^4.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isaiahnields/review-analysis.git"
+  },
+  "author": "Isaiah Nields",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/isaiahnields/review-analysis/issues"
+  },
+  "homepage": "https://github.com/isaiahnields/review-analysis#readme"
+}
