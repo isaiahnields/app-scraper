@@ -3,10 +3,10 @@ var fs = require('fs');
 var sqlite3 = require('sqlite3').verbose();
 
 // create the reviews database
-let db = new sqlite3.Database('reviews.db');
+let db = new sqlite3.Database('app-store/reviews.db');
 
 // read in the apps that will be loaded
-const apps = JSON.parse(fs.readFileSync("apps.json"));
+const apps = JSON.parse(fs.readFileSync("app-store/apps.json"));
 
 // iterates over the apps in apps.json
 for (let app of apps)
@@ -21,7 +21,7 @@ for (let app of apps)
     db.run(`CREATE TABLE ${app.name}(ID integer PRIMARY KEY, Version text, Score integer, Title text, Text text)`);
 
 
-    for (var pageNumber = 1; pageNumber < 11; pageNumber++)
+    for (let pageNumber = 1; pageNumber < 11; pageNumber++)
     {
       // get the reviews of the specified app
       store.reviews({
