@@ -50,10 +50,5 @@ for (let app of apps)
       // print an error to the console if one is thrown
       .catch(console.log);
     }
-
-
   });
-
-
-
 }
