@@ -3,7 +3,7 @@ var fs = require('fs');
 var sqlite3 = require('sqlite3').verbose();
 
 // create the reviews database
-let db = new sqlite3.Database('app-store/reviews.db');
+let db = new sqlite3.Database('apps.db');
 
 // read in the apps that will be loaded
 const apps = JSON.parse(fs.readFileSync("app-store/apps.json"));
@@ -15,40 +15,53 @@ for (let app of apps)
   db.serialize( () =>
   {
     // drop the table if it
-    db.run(`DROP TABLE IF EXISTS ${app.name}`);
+    db.run('DROP TABLE IF EXISTS iOS');
 
     // creats a table with the specified columns
-    db.run(`CREATE TABLE ${app.name}(ID integer PRIMARY KEY, Version text, Score integer, Title text, Text text)`);
+    db.run(`CREATE TABLE iOS(
+      ID integer PRIMARY KEY,
+      Title text,
+      Description text,
+      Size integer,
+      Released text,
+      Updated text,
+      ReleaseNotes text,
+      Version text,
+      Price real,
+      DeveloperId real,
+      Developer text,
+      Score real,
+      Reviews integer,
+      CurrentVersionScore real,
+      CurrentVersionReviews integer
+    )`);
 
+    // get the reviews of the specified app
+    store.app({ id: `${app.id}` })
 
-    for (let pageNumber = 1; pageNumber < 11; pageNumber++)
-    {
-      // get the reviews of the specified app
-      store.reviews({
-        id: `${app.id}`,
-        sort: store.sort.HELPFUL,
-        page: pageNumber
-      })
+    // passes the reviews into the following function
+    .then( (data) => {
+      db.run('INSERT INTO iOS VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      data.id,
+      data.title,
+      data.description,
+      data.size,
+      data.released,
+      data.updated,
+      data.releaseNotes,
+      data.version,
+      data.price,
+      data.developerId,
+      data.developer,
+      data.score,
+      data.reviews,
+      data.currentVersionScore,
+      data.currentVersionReviews
+    )
+    })
 
-      // passes the reviews into the following function
-      .then( (reviews) => {
+    // print an error to the console if one is thrown
+    .catch(console.log);
 
-        // iterates over the reviews of the current page
-        for (let review of reviews)
-        {
-          // inserts the review into the apps table
-          db.run(
-            "INSERT INTO " + app.name + " VALUES(?, ?, ?, ?, ?)",
-          review.id,
-          review.version,
-          review.score,
-          review.title,
-          review.text);
-        }
-      })
-
-      // print an error to the console if one is thrown
-      .catch(console.log);
-    }
   });
 }

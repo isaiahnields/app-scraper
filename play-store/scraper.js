@@ -3,7 +3,7 @@ var fs = require('fs');
 var sqlite3 = require('sqlite3').verbose();
 
 // create the reviews database
-let db = new sqlite3.Database('play-store/reviews.db');
+let db = new sqlite3.Database('apps.db');
 
 // read in the apps that will be loaded
 const apps = JSON.parse(fs.readFileSync("play-store/apps.json"));
@@ -15,41 +15,56 @@ for (let app of apps)
   db.serialize( () =>
   {
     // drop the table if it
-    db.run(`DROP TABLE IF EXISTS ${app.name}`);
+    db.run(`DROP TABLE IF EXISTS Android`);
 
     // creats a table with the specified columns
-    db.run(`CREATE TABLE ${app.name}(ID text, UserName text, Date text, Score integer, Text text)`);
+    db.run(`CREATE TABLE Android(
+      AppId text PRIMARY KEY,
+      Title text,
+      Description text,
+      Summary text,
+      Installs integer,
+      Score real,
+      Ratings integer,
+      Reviews integer,
+      Price real,
+      Size text,
+      AndroidVersion text,
+      Developer text,
+      Released text,
+      Updated integer,
+      Version text
+    )`);
 
 
-    for (let pageNumber = 1; pageNumber < 100; pageNumber++)
-    {
-      // get the reviews of the specified app
-      gplay.reviews({
-        appId: `${app.id}`,
-        sort: gplay.sort.HELPFULNESS,
-        page: pageNumber
-      })
+    // get the reviews of the specified app
+    gplay.app({appId: `${app.id}`})
 
-      // passes the reviews into the following function
-      .then( (reviews) => {
+    // passes the reviews into the following function
+    .then( (data) => {
 
-        // iterates over the reviews of the current page
-        for (let review of reviews)
-        {
-          console.log(review);
-          // inserts the review into the apps table
-          db.run(
-            "INSERT INTO " + app.name + " VALUES(?, ?, ?, ?, ?)",
-          review.id,
-          review.userName,
-          review.date,
-          review.score,
-          review.text);
-        }
-      })
+      db.run('INSERT INTO Android VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        data.appId,
+        data.title,
+        data.description,
+        data.summary,
+        data.minInstalls,
+        data.score,
+        data.ratings,
+        data.reviews,
+        data.price,
+        data.size,
+        data.androidVersion,
+        data.developer,
+        data.released,
+        data.updated,
+        data.version
+      );
 
-      // print an error to the console if one is thrown
-      .catch(console.log);
-    }
+    })
+
+    // print an error to the console if one is thrown
+    .catch(console.log);
+
   });
 }
