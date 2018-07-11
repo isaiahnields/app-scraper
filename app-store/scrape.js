@@ -14,11 +14,11 @@ for (let app of apps)
   // run the following commands in serialized mode
   db.serialize( () =>
   {
-    // drop the table if it
-    db.run('DROP TABLE IF EXISTS iOS');
+    // drop the table if it exists
+    db.run('DROP TABLE IF EXISTS AppStorePOS');
 
     // creats a table with the specified columns
-    db.run(`CREATE TABLE iOS(
+    db.run(`CREATE TABLE AppStorePOS(
       ID integer PRIMARY KEY,
       Title text,
       Description text,
@@ -40,7 +40,8 @@ for (let app of apps)
     store.app({ id: `${app.id}` })
 
     // passes the reviews into the following function
-    .then( (data) => {
+    .then( (data) =>
+    {
       db.run('INSERT INTO iOS VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       data.id,
       data.title,
@@ -57,7 +58,7 @@ for (let app of apps)
       data.reviews,
       data.currentVersionScore,
       data.currentVersionReviews
-    )
+      );
     })
 
     // print an error to the console if one is thrown

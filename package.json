@@ -1,11 +1,12 @@
 {
   "name": "review-analysis",
   "version": "1.0.0",
-  "description": "",
+  "description": "Point of Sale market analysis",
   "main": "index.js",
   "dependencies": {
     "app-store-scraper": "^0.13.0",
     "google-play-scraper": "^6.1.0",
+    "googleapis": "^32.0.0",
     "sqlite3": "^4.0.1"
   },
   "devDependencies": {},

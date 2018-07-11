@@ -15,10 +15,10 @@ for (let app of apps)
   db.serialize( () =>
   {
     // drop the table if it
-    db.run(`DROP TABLE IF EXISTS Android`);
+    db.run('DROP TABLE IF EXISTS PlayStorePOS');
 
     // creats a table with the specified columns
-    db.run(`CREATE TABLE Android(
+    db.run(`CREATE TABLE PlayStorePOS(
       AppId text PRIMARY KEY,
       Title text,
       Description text,
@@ -41,8 +41,8 @@ for (let app of apps)
     gplay.app({appId: `${app.id}`})
 
     // passes the reviews into the following function
-    .then( (data) => {
-
+    .then( (data) =>
+    {
       db.run('INSERT INTO Android VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         data.appId,
         data.title,
@@ -60,7 +60,6 @@ for (let app of apps)
         data.updated,
         data.version
       );
-
     })
 
     // print an error to the console if one is thrown
