@@ -4,7 +4,7 @@ var fs = require('fs');
 var moment = require('moment');
 
 let spreadsheetId = '1jnPsTwKRQimUPfKEJ9bzGp5FOjIJuW6Ihulnhme3foI';
-let range = 'A2:P2';
+let range = 'A2:O2';
 
 
 // read in the apps that will be loaded
@@ -20,7 +20,6 @@ for (let app of apps.app)
         moment().format('MMMM D, YYYY h:mm:ss a'),
         data.id,
         data.title,
-        data.description,
         data.size,
         moment(data.released).format('MMMM D, YYYY h:mm:ss a'),
         moment(data.updated).format('MMMM D, YYYY h:mm:ss a'),

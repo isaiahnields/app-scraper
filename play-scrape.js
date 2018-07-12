@@ -4,7 +4,7 @@ var fs = require('fs');
 var moment = require('moment');
 
 let spreadsheetId = '18oOBL5jZefDrUQp-afVO3QbJE0saJvaqucgMFXdEjTw';
-let range = 'A2:P2';
+let range = 'A2:O2';
 
 
 // read in the apps that will be loaded
@@ -19,7 +19,6 @@ for (let app of apps.play)
         moment().format('MMMM D, YYYY'),
         data.appId,
         data.title,
-        data.description,
         data.summary,
         data.minInstalls,
         data.score,
