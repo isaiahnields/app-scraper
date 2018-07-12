@@ -40,7 +40,7 @@ function append(spreadsheetId, range, values)
     valueInputOption: 'USER_ENTERED',
 
     // How the input data should be inserted.
-    insertDataOption: 'INSERT_ROWS',
+    insertDataOption: 'OVERWRITE',
 
     resource: {
       values: values

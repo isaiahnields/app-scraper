@@ -3,8 +3,8 @@ var play = require('google-play-scraper');
 var fs = require('fs');
 var moment = require('moment');
 
-let spreadsheetId = '1_wrqwVoN0iBeYH0ThGvQ9kkl0H9nZtsQWeO0huAS-9U';
-let range = 'Play Store!A2:P2';
+let spreadsheetId = '18oOBL5jZefDrUQp-afVO3QbJE0saJvaqucgMFXdEjTw';
+let range = 'A2:P2';
 
 
 // read in the apps that will be loaded
@@ -16,7 +16,7 @@ for (let app of apps.play)
     play.app({ appId: `${app.id}` }).then( (data) =>
     {
       sheets.append(spreadsheetId, range, [[
-        moment().format('MMMM D, YYYY h:mm:ss a'),
+        moment().format('MMMM D, YYYY'),
         data.appId,
         data.title,
         data.description,
@@ -29,8 +29,8 @@ for (let app of apps.play)
         data.size,
         data.androidVersion,
         data.developer,
-        moment(data.released).format('MMMM D, YYYY h:mm:ss a'),
-        moment(data.updated).format('MMMM D, YYYY h:mm:ss a'),
+        moment(data.released).format('MMMM D, YYYY'),
+        moment(data.updated).format('MMMM D, YYYY'),
         data.version
       ]]);
     });

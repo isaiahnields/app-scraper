@@ -3,8 +3,8 @@ var store = require('app-store-scraper');
 var fs = require('fs');
 var moment = require('moment');
 
-let spreadsheetId = '1_wrqwVoN0iBeYH0ThGvQ9kkl0H9nZtsQWeO0huAS-9U';
-let range = 'App Store!A2:P2';
+let spreadsheetId = '1jnPsTwKRQimUPfKEJ9bzGp5FOjIJuW6Ihulnhme3foI';
+let range = 'A2:P2';
 
 
 // read in the apps that will be loaded
@@ -13,6 +13,7 @@ const apps = JSON.parse(fs.readFileSync("apps.json"));
 // iterates over the apps in apps.json
 for (let app of apps.app)
 {
+
     store.app({ id: `${app.id}` }).then( (data) =>
     {
       sheets.append(spreadsheetId, range, [[
