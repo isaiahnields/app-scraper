@@ -1,9 +1,6 @@
 var store = require('app-store-scraper');
 var fs = require('fs');
-var sqlite3 = require('sqlite3').verbose();
 
-// create the reviews database
-let db = new sqlite3.Database('apps.db');
 
 // read in the apps that will be loaded
 const apps = JSON.parse(fs.readFileSync("app-store/apps.json"));

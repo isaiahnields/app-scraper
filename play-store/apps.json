@@ -1,7 +1,0 @@
-[
-  {"name": "SquarePOS", "id": "com.squareup"},
-  {"name": "PayPalHere", "id": "com.paypal.here"},
-  {"name": "ShopifyPOS", "id": "com.shopify.pos"},
-  {"name": "ToastPOS", "id": "com.toasttab.pos"},
-  {"name": "CloverGo", "id": "com.firstdata.clovergo"}
-]
