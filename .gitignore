@@ -180,3 +180,4 @@ venv.bak/
 .mypy_cache/
 
 /bin
+client_secret.json

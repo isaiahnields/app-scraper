@@ -1,49 +1,22 @@
-var gplay = require('google-play-scraper');
+var sheets = require('./sheets-api.js')
+var play = require('google-play-scraper');
 var fs = require('fs');
-var sqlite3 = require('sqlite3').verbose();
+var moment = require('moment');
 
-// create the reviews database
-let db = new sqlite3.Database('apps.db');
+let spreadsheetId = '1_wrqwVoN0iBeYH0ThGvQ9kkl0H9nZtsQWeO0huAS-9U';
+let range = 'Play Store!A2:P2';
+
 
 // read in the apps that will be loaded
-const apps = JSON.parse(fs.readFileSync("play-store/apps.json"));
+const apps = JSON.parse(fs.readFileSync("apps.json"));
 
 // iterates over the apps in apps.json
-for (let app of apps)
+for (let app of apps.play)
 {
-  // run the following commands in serialized mode
-  db.serialize( () =>
-  {
-    // drop the table if it
-    db.run('DROP TABLE IF EXISTS PlayStorePOS');
-
-    // creats a table with the specified columns
-    db.run(`CREATE TABLE PlayStorePOS(
-      AppId text PRIMARY KEY,
-      Title text,
-      Description text,
-      Summary text,
-      Installs integer,
-      Score real,
-      Ratings integer,
-      Reviews integer,
-      Price real,
-      Size text,
-      AndroidVersion text,
-      Developer text,
-      Released text,
-      Updated integer,
-      Version text
-    )`);
-
-
-    // get the reviews of the specified app
-    gplay.app({appId: `${app.id}`})
-
-    // passes the reviews into the following function
-    .then( (data) =>
+    play.app({ appId: `${app.id}` }).then( (data) =>
     {
-      db.run('INSERT INTO Android VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      sheets.append(spreadsheetId, range, [[
+        moment().format('MMMM D, YYYY h:mm:ss a'),
         data.appId,
         data.title,
         data.description,
@@ -56,14 +29,9 @@ for (let app of apps)
         data.size,
         data.androidVersion,
         data.developer,
-        data.released,
-        data.updated,
+        moment(data.released).format('MMMM D, YYYY h:mm:ss a'),
+        moment(data.updated).format('MMMM D, YYYY h:mm:ss a'),
         data.version
-      );
-    })
-
-    // print an error to the console if one is thrown
-    .catch(console.log);
-
-  });
+      ]]);
+    });
 }

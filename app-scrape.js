@@ -1,65 +1,37 @@
+var sheets = require('./sheets-api.js')
 var store = require('app-store-scraper');
 var fs = require('fs');
+var moment = require('moment');
+
+let spreadsheetId = '1_wrqwVoN0iBeYH0ThGvQ9kkl0H9nZtsQWeO0huAS-9U';
+let range = 'App Store!A2:P2';
 
 
 // read in the apps that will be loaded
-const apps = JSON.parse(fs.readFileSync("app-store/apps.json"));
+const apps = JSON.parse(fs.readFileSync("apps.json"));
 
 // iterates over the apps in apps.json
-for (let app of apps)
+for (let app of apps.app)
 {
-  // run the following commands in serialized mode
-  db.serialize( () =>
-  {
-    // drop the table if it exists
-    db.run('DROP TABLE IF EXISTS AppStorePOS');
-
-    // creats a table with the specified columns
-    db.run(`CREATE TABLE AppStorePOS(
-      ID integer PRIMARY KEY,
-      Title text,
-      Description text,
-      Size integer,
-      Released text,
-      Updated text,
-      ReleaseNotes text,
-      Version text,
-      Price real,
-      DeveloperId real,
-      Developer text,
-      Score real,
-      Reviews integer,
-      CurrentVersionScore real,
-      CurrentVersionReviews integer
-    )`);
-
-    // get the reviews of the specified app
-    store.app({ id: `${app.id}` })
-
-    // passes the reviews into the following function
-    .then( (data) =>
+    store.app({ id: `${app.id}` }).then( (data) =>
     {
-      db.run('INSERT INTO iOS VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      data.id,
-      data.title,
-      data.description,
-      data.size,
-      data.released,
-      data.updated,
-      data.releaseNotes,
-      data.version,
-      data.price,
-      data.developerId,
-      data.developer,
-      data.score,
-      data.reviews,
-      data.currentVersionScore,
-      data.currentVersionReviews
-      );
-    })
-
-    // print an error to the console if one is thrown
-    .catch(console.log);
-
-  });
+      sheets.append(spreadsheetId, range, [[
+        moment().format('MMMM D, YYYY h:mm:ss a'),
+        data.id,
+        data.title,
+        data.description,
+        data.size,
+        moment(data.released).format('MMMM D, YYYY h:mm:ss a'),
+        moment(data.updated).format('MMMM D, YYYY h:mm:ss a'),
+        data.releaseNotes,
+        data.version,
+        data.price,
+        data.developerId,
+        data.developer,
+        data.score,
+        data.reviews,
+        data.currentVersionScore,
+        data.currentVersionReviews
+      ]]);
+    });
 }

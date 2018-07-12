@@ -1,33 +1,59 @@
-const fs = require('fs');
-const readline = require('readline');
-const { google } = require('googleapis');
+var { google } = require('googleapis');
+var privatekey = require("./client_secret.json");
+const sheets = google.sheets('v4');
 
-function append(values, range, valueInputOption)
+// configure a JWT auth client
+const jwtClient = new google.auth.JWT(
+       privatekey.client_email,
+       null,
+       privatekey.private_key,
+       ['https://www.googleapis.com/auth/spreadsheets']);
+
+
+function get(spreadsheetId, range)
 {
-  // package values in resources object
-  let resource = {
-    values: values
-  };
 
-  // append the resource to the sheet
-  const sheets = google.sheets({version: 'v4', auth: 'AIzaSyCyWlPYPMBRdawLg6cg0ma-kI-Ztfi7zc4'});
-  sheets.spreadsheets.values.append({
-    spreadsheetId: "1_wrqwVoN0iBeYH0ThGvQ9kkl0H9nZtsQWeO0huAS-9U",
-    range: range,
-    valueInputOption: valueInputOption,
-    resource,
-  }, (err, result) => {
-    if (err) {
-      // Handle error.
-      console.log(err);
-    } else {
-      console.log(`${result.updates.updatedCells} cells appended.`);
-    }
+  sheets.spreadsheets.values.get({
+     auth: jwtClient,
+     spreadsheetId: spreadsheetId,
+     range: range
+  }, function (err, response) {
+     if (err) throw err;
+
+     console.log(response.data.values);
+     return response.data.values;
   });
 }
 
-append([1, 2, 3], "'App Store'!A1:1", "RAW");
+
+function append(spreadsheetId, range, values)
+{
+  var request = {
+    // The ID of the spreadsheet to update.
+    spreadsheetId: spreadsheetId,
+
+    // The A1 notation of a range to search for a logical table of data.
+    // Values will be appended after the last row of the table.
+    range: range,
+
+    // How the input data should be interpreted.
+    valueInputOption: 'USER_ENTERED',
+
+    // How the input data should be inserted.
+    insertDataOption: 'INSERT_ROWS',
+
+    resource: {
+      values: values
+    },
+
+    auth: jwtClient,
+  };
+
+  sheets.spreadsheets.values.append(request);
+
+}
 
 module.exports = {
+  get: get,
   append: append
-}
+};
