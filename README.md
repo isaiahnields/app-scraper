@@ -2,5 +2,4 @@
 
 > A scraper that saves Google Play and App Store data to a spreadsheet.
 
-[![Phantomjs](https://img.shields.io/badge/phantomjs-2.1.1-800080.svg)](http://phantomjs.org/)
-[![License](https://img.shields.io/github/license/isaiahnields/web-loader.svg)](https://github.com/isaiahnields/web-loader/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/isaiahnields/app-scraper.svg)](https://github.com/isaiahnields/app-scraper/blob/master/LICENSE)
